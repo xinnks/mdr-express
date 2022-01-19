@@ -265,4 +265,4 @@ app.route("/*")
   res.status(400).send(NotFoundHtml);
 });
 
-app.listen(port, () => console.log("Listening to http://localhost:", port));
+app.listen(process.env.PORT || 3000, () => console.log("Listening to PORT: ", process.env.PORT || 3000));
