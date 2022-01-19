@@ -195,6 +195,7 @@ app.post("/collect-content", jsonParser, async (req, res) => {
   console.log(req.body);
   const data = req.body;
   if(!data.secret || (data.secret && (data.secret !== process.env.CRON_REQUEST_SECRET))){
+    console.log("data: -- ", data);
     return res.status(403).json("Unauthorized request");
   }
   
@@ -233,6 +234,7 @@ app.post("/send-emails", jsonParser, async (req, res) => {
   console.log(req.body);
   const data = req.body;
   if(!data.secret || (data.secret && (data.secret !== process.env.CRON_REQUEST_SECRET))){
+    console.log("data: -- ", data);
     return res.status(403).json("Unauthorized request");
   }
 
