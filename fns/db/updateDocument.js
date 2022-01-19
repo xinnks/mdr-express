@@ -1,4 +1,3 @@
-const { resolveConfig } = require('prettier');
 const {client, dbName} = require('./client');
 
 /**
