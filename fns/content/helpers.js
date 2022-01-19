@@ -180,7 +180,7 @@ const analysePostsByKeywords = (posts, keywords, startingPoint, totalPosts, sour
         title: post.title,
         description: post.description,
         datePublished: post.datePublished,
-        author: formatName(post.author),
+        author: !!post.author ? (post.author.includes(" ") ? formatName(post.author) : post.author) : "Unknown Author",
         image: post.image,
         keywords: keywords.join(),
         articleValue: post.postValue,
