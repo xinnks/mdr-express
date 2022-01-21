@@ -184,7 +184,8 @@ const analysePostsByKeywords = (posts, keywords, startingPoint, totalPosts, sour
         image: post.image,
         keywords: keywords.join(),
         articleValue: post.postValue,
-        source: `dev.to`
+        source: `dev.to`,
+        contentStashId: post._id.toString()
       }));
       // console.log(`postsByValue SORTED ###: -- `, sortedArticles.length, sortedArticles);
       resolve(sortedArticles);

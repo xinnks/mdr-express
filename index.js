@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 
-const { Subscribe, CollectContentForDay, SendContentEmails, KeywordsUpdateRequest, UpdateKeywords, Unsubscribe, UnsubscriptionRequest } = require("./fns");
+const { Subscribe, CollectContentForDay, SendContentEmails, KeywordsUpdateRequest, UpdateKeywords, Unsubscribe, UnsubscriptionRequest, RedirectToArticle } = require("./fns");
 const { formatDate, dateDifference } = require("./fns/content");
 
 // parsers
@@ -258,6 +258,30 @@ app.post("/send-emails", jsonParser, async (req, res) => {
     res.status(500).json(e);
   }
 });
+
+app.get("/rdr", async (req, res) => { // localhost:3000/rdr?id=61e80ba33b53f4e63fb18892
+  const { id } = req.query;
+  if (!id) {
+    console.error("id not provided!");
+    return res.status(400).send(NotFoundHtml);
+  }
+  console.error("Getting article with id: -- ", id);
+
+  try{
+    const {status, url} = await RedirectToArticle(id);
+    
+    if(status === "Read status updated!"){
+      return res.redirect(url);
+    } else {
+      console.error("{status, url}: -- ", status, url);
+      return res.status(400).send(NotFoundHtml);
+    }
+  }
+  catch (e) {
+    console.error("ERROR: -- ", e);
+    res.status(500).send(e);
+  }
+})
 
 app.route("/*")
 .post(async (req, res) => {

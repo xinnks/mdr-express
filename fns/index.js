@@ -5,6 +5,7 @@ const { Subscribe } = require("./subscribe");
 const { Unsubscribe } = require("./unsubscribe");
 const { UpdateKeywords } = require("./updateKeywords");
 const { UnsubscriptionRequest } = require("./unsubscriptionRequest");
+const { RedirectToArticle } = require("./redirectToArticle");
 
 module.exports = {
   CollectContentForDay,
@@ -13,5 +14,6 @@ module.exports = {
   Subscribe,
   Unsubscribe,
   UnsubscriptionRequest,
-  UpdateKeywords
+  UpdateKeywords,
+  RedirectToArticle
 }

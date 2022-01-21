@@ -42,7 +42,7 @@ const SendContentEmails = () => new Promise(async (resolve, reject) => {
       user: {name: user.name, email:user.email},
       date: formatDate(new Date(), "human"),
       content: pickedPosts.map(x => ({
-        url: x.url,
+        url: `${process.env.SITE_URL}/rdr?id=${x.contentStashId}`,
         image: x.image,
         title: x.title,
         description: x.description,
