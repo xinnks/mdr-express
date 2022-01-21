@@ -52,7 +52,7 @@ const SendContentEmails = () => new Promise(async (resolve, reject) => {
     });
   });
   
-  const storeReads = insertDocuments(allUsersReads, process.env.READS_COLLECTION);
+  const storeReads = await insertDocuments(allUsersReads, process.env.READS_COLLECTION);
   if(!storeReads){
     message = "Failed to store reads to database.";
     // TODO: send error log email
