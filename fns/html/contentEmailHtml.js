@@ -375,7 +375,7 @@ const ContentEmailHtml = (content, keywords, user) => {
 			font-family: sans-serif;" class="footer">
 
               This email was sent to&nbsp;you becouse you&nbsp;are subscribed&nbsp;to the&nbsp;My Daiy Reads
-              content&nbsp;. You&nbsp;can <a href="https://my-daily-reads.netlify.app/unsubscribe?email=${encodeURIComponent(user.email)}"
+              content&nbsp;. You&nbsp;can <a href="https://my-daily-reads.herokuapp.app/unsubscribe?email=${encodeURIComponent(user.email)}"
                 target="_blank"
                 style="text-decoration: underline; color: #999999; font-family: sans-serif; font-size: 13px; font-weight: 400; line-height: 150%;">unsubscribe</a>
               from these emails anytime.

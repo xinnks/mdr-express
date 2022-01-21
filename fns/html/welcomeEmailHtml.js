@@ -98,7 +98,7 @@ const WelcomeEmailHtml = (firstName, keywordsText, email) => {
 		<td align="center" valign="top" style="border-collapse: collapse;border-spacing: 0;margin: 0;padding: 0;padding-left: 6.25%;padding-right: 6.25%;width: 87.5%;font-size: 13px;font-weight: 400;line-height: 150%;padding-top: 20px;padding-bottom: 20px;color: #999999;font-family: sans-serif;-webkit-font-smoothing: antialiased;text-size-adjust: 100%;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" class="footer">
 
 				This email was sent to&nbsp;you becouse you&nbsp;are subscribed&nbsp;to the&nbsp;My Daiy Reads
-				content&nbsp;. You&nbsp;can <a href="https://my-daily-reads.netlify.app/unsubscribe?email=${encodeURIComponent(email)}"
+				content&nbsp;. You&nbsp;can <a href="https://my-daily-reads.herokuapp.app/unsubscribe?email=${encodeURIComponent(email)}"
 					target="_blank"
 					style="text-decoration: underline; color: #999999; font-family: sans-serif; font-size: 13px; font-weight: 400; line-height: 150%;">unsubscribe</a>
 				from these emails anytime.
