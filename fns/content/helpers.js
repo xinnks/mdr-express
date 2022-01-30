@@ -108,7 +108,7 @@ const getImportantPageFields = (url, source = "dev.to") => new Promise(async (re
     // console.log("headMetaOgImage: -- ", headMetaOgImage);
 
     // get page <head> title inner text; get value of the title in relation to the keywords
-    let headTitle = $('title').text();
+    let headTitle = $('head').find('title').text();
     // console.log("headTitle [title]: -- ", headTitle);
 
     // get page <head> description meta content inner text; get value of the description in relation to the keywords
