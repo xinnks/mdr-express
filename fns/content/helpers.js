@@ -206,47 +206,44 @@ const analysePostsByKeywords = (posts, keywords, startingPoint, totalPosts, sour
 const formatPostsDataSchema = (posts, startingCount, totalPostsCount, source = 'hashnode') => new Promise(async (resolve, reject) => {
   let formattedPosts = [];
   console.log("POSTS Count: ",totalPostsCount, " | totalPostsCount: ", totalPostsCount, " | posts.length: ", posts.length);
+  let fetchAll = [];
   for(let i = 0; i < totalPostsCount; i++){
-    // console.log("WORKING ON POST No: ",i)
-    if(source === "hashnode"){
-      // console.log("HASHNODE URL CHECK");
-      const postUrl = (posts[i].author && posts[i].author.publicationDomain) ? `https://${posts[i].author.publicationDomain}/${posts[i].slug}` : `https://${posts[i].author.username}.hashnode.com/${posts[i].slug}`;
-      const articleContent = await getImportantPageFields(postUrl, source);
-      console.log("WORKING ON POST No: ",i," FROM (Hashnode)[", postUrl ,"]: -- ", articleContent.headTitle);
-      let alternativeImage = articleContent.headMetaOgImage;
+    fetchAll = posts.map(x => {
+      const postUrl = source === "hashnode" ? ((x.author && x.author.publicationDomain) ? `https://${x.author.publicationDomain}/${x.slug}` : `https://${x.author.username}.hashnode.com/${x.slug}`) : x.url;
+      const fetchFields = async () => await getImportantPageFields(postUrl, source);
+      return fetchFields();
+    });
+  }
+  const getAll = Promise.all(fetchAll);
+  try {
+    console.time("timeUsed");
+    const allFetched = await getAll;
+    console.timeEnd("timeUsed");
+    console.log("FINISHED CHECKING URLs[totalPostsCount]: ", allFetched.length);
+    // console.log("HASHNODE URL CHECK");
+    let isHashnode = source === "hashnode";
+    allFetched.forEach(item => {
+      // content
+      let postInfo = posts.filter(p => p.url === item.url);
+      let postUrl = isHashnode ? ((postInfo[0].author && postInfo[0].author.publicationDomain) ? `https://${postInfo[0].author.publicationDomain}/${postInfo[0].slug}` : `https://${postInfo[0].author.username}.hashnode.com/${postInfo[0].slug}`) : item.url;
+      delete item.url;
+      console.log(`WORKING ON POST FROM (${source})[${postUrl}]: -- `, item.headTitle);
+      let alternativeImage = item.headMetaOgImage;
       formattedPosts.push({
-        title: posts[i].title,
-        domain: posts[i].author.publicationDomain || `https://${posts[i].author.username}.hashnode.com`,
-        description: posts[i].brief,
+        title: postInfo[0].title,
+        domain: isHashnode ? (postInfo[0].author.publicationDomain || `https://${postInfo[0].author.username}.hashnode.com`) : 'https://dev.to',
+        description: isHashnode ? postInfo[0].brief : postInfo[0].description,
         url: postUrl,
-        image: posts[i].coverImage || alternativeImage,
-        author: posts[i].author.name,
-        datePublished: posts[i].dateAdded,
-        ...articleContent,
+        image: isHashnode ? (postInfo[0].coverImage || alternativeImage) : (postInfo[0].cover_image || alternativeImage),
+        author: isHashnode ? postInfo[0].author.name : postInfo[0].user.name,
+        datePublished: isHashnode ? postInfo[0].dateAdded : postInfo[0].published_at,
+        ...item,
         source
       });
-    } else {
-      // console.log("DEV.TO URL CHECK");
-      const postUrl = posts[i].url;
-      const articleContent = await getImportantPageFields(postUrl, source);
-      console.log("WORKING ON POST No: ", i," FROM (DevTo)[", postUrl ,"]: -- ", articleContent.headTitle);
-      let alternativeImage = articleContent.headMetaOgImage;
-      formattedPosts.push({
-        title: posts[i].title,
-        domain: 'https://dev.to',
-        description: posts[i].description,
-        url: postUrl,
-        image: posts[i].cover_image || alternativeImage,
-        author: posts[i].user.name,
-        datePublished: posts[i].published_at,
-        ...articleContent,
-        source
-      });
-    }
-    if(i + 1 >= totalPostsCount){
-      console.log("FINISHED CHECKING URLs[i]: ",i + 1);
-      return resolve(formattedPosts);
-    }
+    });
+    return resolve(formattedPosts);
+  } catch(e) {
+    console.log("Error logged: ", e);
   }
 
 });
