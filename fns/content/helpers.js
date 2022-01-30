@@ -137,7 +137,8 @@ const getImportantPageFields = (url, source = "dev.to") => new Promise(async (re
       headTitle,
       headMetaDescription,
       bodyH1Heading,
-      bodyArticleContent
+      bodyArticleContent,
+      url // for comparison purposes
     });
   })
   .catch(error => {
@@ -147,7 +148,8 @@ const getImportantPageFields = (url, source = "dev.to") => new Promise(async (re
       headTitle: "",
       headMetaDescription: "",
       bodyH1Heading: "",
-      bodyArticleContent: ""
+      bodyArticleContent: "",
+      url // for comparison purposes
     });
   })
 });
