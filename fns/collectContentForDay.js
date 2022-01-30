@@ -15,10 +15,10 @@ const CollectContentForDay = (contentLimit, previousInsertDate = yesterdayDate) 
   const allContent = formattedDevToContent;
   const allContentWithInsertDate = allContent.map(post => ({...post, insertDate: todayDate}));
   
-  let existingContentStash = await fetchAllCollectionData(process.env.CONTENT_COLLECTION, {insertDate: { $eq: previousInsertDate}});
+  let existingContentStash = await fetchAllCollectionData(process.env.CONTENT_COLLECTION); // {insertDate: { $eq: previousInsertDate}}
   console.log("existing documents: --- ", existingContentStash.length);
   if(existingContentStash.length){
-    const deleteExistingDBData = await deleteManyDocuments({insertDate: { $eq: previousInsertDate}}, process.env.CONTENT_COLLECTION);
+    const deleteExistingDBData = await deleteManyDocuments('', process.env.CONTENT_COLLECTION); // {insertDate: { $eq: previousInsertDate}}
     console.log("deleted documents: --- ", deleteExistingDBData);
     if(!deleteExistingDBData){
       message = "Could not delete documents";
