@@ -2,6 +2,7 @@ require('dotenv').config();
 const mailjet = require('node-mailjet').connect(process.env.MAILJET_API_KEY, process.env.MAILJET_API_SECRET);
 const axios = require("axios");
 const cheerio = require("cheerio");
+const Bottleneck = require('bottleneck');
 const { otpEmailHtml } = require('../html/otpEmailHtml');
 const { ContentEmailHtml, WelcomeEmailHtml, FarewellEmailHtml } = require('../html');
 const { floor, random } = require('mathjs');
@@ -206,14 +207,15 @@ const analysePostsByKeywords = (posts, keywords, startingPoint, totalPosts, sour
 const formatPostsDataSchema = (posts, startingCount, totalPostsCount, source = 'hashnode') => new Promise(async (resolve, reject) => {
   let formattedPosts = [];
   console.log("POSTS Count: ",totalPostsCount, " | totalPostsCount: ", totalPostsCount, " | posts.length: ", posts.length);
-  let fetchAll = [];
-  for(let i = 0; i < totalPostsCount; i++){
-    fetchAll = posts.map(x => {
-      const postUrl = source === "hashnode" ? ((x.author && x.author.publicationDomain) ? `https://${x.author.publicationDomain}/${x.slug}` : `https://${x.author.username}.hashnode.com/${x.slug}`) : x.url;
-      const fetchFields = async () => await getImportantPageFields(postUrl, source);
-      return fetchFields();
-    });
-  }
+  const limiter = new Bottleneck({
+    maxConcurent: 5
+  });
+  const concurLimitedGetFields = limiter.wrap(getImportantPageFields);
+  const fetchAll = posts.map(x => {
+    const postUrl = source === "hashnode" ? ((x.author && x.author.publicationDomain) ? `https://${x.author.publicationDomain}/${x.slug}` : `https://${x.author.username}.hashnode.com/${x.slug}`) : x.url;
+    const fetchFields = async () => await concurLimitedGetFields(postUrl, source);
+    return fetchFields();
+  });
   const getAll = Promise.all(fetchAll);
   try {
     console.time("timeUsed");
